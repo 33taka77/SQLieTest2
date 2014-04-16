@@ -92,7 +92,7 @@ static SQLiteManager* gSQLiteManager;
         [array addObject:column];
     }
     va_end(arguments);
-    BOOL ret;
+
     NSMutableString* sql = [NSMutableString stringWithFormat:@"insert into %@ (",_tableName ];
     for( NSDictionary* param in array ){
         [sql appendFormat:@"%@ ,", [param valueForKey:@"name"]];
