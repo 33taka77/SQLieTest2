@@ -82,6 +82,7 @@ static SQLiteManager* gSQLiteManager;
 
 - (BOOL)insertObjectTestData:(NSDictionary*)param, ...
 {
+    BOOL result = YES;
     va_list arguments;
     va_start(arguments, param);
     NSDictionary* column = param;
@@ -106,6 +107,19 @@ static SQLiteManager* gSQLiteManager;
     [strSql appendString:@")"];
     NSLog(@"insert: sql = %@",strSql);
     
+    int ret = sqlite3_prepare_v2(_sqlite, [strSql UTF8String], -1, &_statement, nil);
+    if( ret != SQLITE_OK){
+        result = NO;
+    }else{
+        for ( int x = 1; x < array.count; ++x ) {
+            sqlite3_reset(_statement);
+            sqlite3_bind_int(_statement,1,x);
+            sqlite3_bind_int(_statement,2,x);
+            sqlite3_bind_int(_statement,3,x);
+            sqlite3_step(_statement);
+        }
+    }
+    return result;
 }
 
 - (BOOL)createDB:(NSString*)dbfileName
